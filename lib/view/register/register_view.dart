@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/view/home/home_view.dart';
 import 'package:flash_chat/view/login/login_view.dart';
@@ -10,20 +13,39 @@ class RegisterView extends StatelessWidget {
   TextEditingController fullName = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference elektronika =
+      FirebaseFirestore.instance.collection('elektronika');
+
+  Future<void> addUser() {
+    return users
+        .add({
+          'fullName': fullName.text,
+          'email': _email.text,
+          'password': _password.text,
+        })
+        .then((value) => log("User Added"))
+        .catchError((error) => log("Failed to add user: $error"));
+  }
+
   Future<void> register() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _email.text,
-        password: _password.text,
-      );
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _email.text,
+            password: _password.text,
+          )
+          .then((value) => {
+                addUser(),
+              });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        log('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        log('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
+      log('$e');
     }
   }
 
@@ -137,6 +159,8 @@ class RegisterView extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             register();
+
+                            Navigator.of(context).pushNamed(HomeView.route);
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Color.fromARGB(255, 7, 10, 212),

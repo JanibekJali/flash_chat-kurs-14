@@ -14,37 +14,47 @@ class _EntryViewState extends State<EntryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            LoginButtonWidget(
-              text: 'Login',
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  LoginView.route,
-                );
-              },
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            LoginButtonWidget(
-              text: 'Register',
-              horizontal: 115,
-              color: Colors.lightBlueAccent,
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  RegisterView.route,
-                );
-              },
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color.fromARGB(255, 3, 24, 182), Colors.black87],
+          ),
+        ),
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 30,
+              ),
+              LoginButtonWidget(
+                text: 'Login',
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    LoginView.route,
+                  );
+                },
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              LoginButtonWidget(
+                text: 'Register',
+                horizontal: 115,
+                color: Colors.lightBlueAccent,
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RegisterView.route,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

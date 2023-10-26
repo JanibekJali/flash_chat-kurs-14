@@ -1,11 +1,33 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/view/home/home_view.dart';
 import 'package:flash_chat/view/register/register_view.dart';
 import 'package:flash_chat/widgets/buttons/login_button_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  LoginView({super.key});
   static const String route = 'LoginView';
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  Future<void> signIn() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      log('user credetial ==> ${credential.user!.uid}');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        log('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        log('Wrong password provided for that user.');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +74,7 @@ class LoginView extends StatelessWidget {
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
+                          controller: emailController,
                           keyboardType: TextInputType.emailAddress,
 
                           decoration: InputDecoration(
@@ -63,6 +86,7 @@ class LoginView extends StatelessWidget {
                         ),
                         SizedBox(height: 16.0),
                         TextFormField(
+                          controller: passwordController,
                           keyboardType: TextInputType.text,
 
                           decoration: InputDecoration(
@@ -101,7 +125,10 @@ class LoginView extends StatelessWidget {
                         ),
                         SizedBox(height: 32.0),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            signIn();
+                            Navigator.of(context).pushNamed(HomeView.route);
+                          },
                           style: ElevatedButton.styleFrom(
                             primary: Color.fromARGB(255, 7, 10, 212),
                             shape: RoundedRectangleBorder(

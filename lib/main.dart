@@ -25,7 +25,7 @@ class FlashChat extends StatelessWidget {
       routes: {
         EntryView.route: (context) => EntryView(),
         HomeView.route: (context) => const HomeView(),
-        LoginView.route: (context) => const LoginView(),
+        LoginView.route: (context) => LoginView(),
         RegisterView.route: (context) => RegisterView(),
       },
     );
